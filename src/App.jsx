@@ -73,19 +73,19 @@ function App() {
   }
 
   return (
-    <div>
+    <main>
       <header>
-        <div>
+        <div id='buttonHeader'>
           <button onClick={showCreation}>Creation</button>
           <button onClick={showSearch}>Search</button>
         </div>
-        <div>Subjects Schedule</div>
+        <div id='titleHeader'>Subjects Schedule</div>
       </header>
       <div className={createMenu ? 'show' : 'hide'}>
-        <div>
+        <div id='creationProfiles'>
           {typeOfCreation.map((creation) => {
           return (
-            <div key={creation.id}>
+            <div key={creation.id} className={'inputsCreation'}>
               Creation of {creation.name}<br/>
               <input type="text" name="" id={creation.name} /><br/>
               <button onClick={_=>createData(creation.name)}>Create</button>
@@ -94,9 +94,9 @@ function App() {
           })}
         </div>
         
-        <div>
-          <div>Cadastro de Horários</div>
-          <div>
+        <div id={'creationOfTimes'}>
+          <div>Creation of Schedule</div>
+          <div id={'timeInputs'}>
             <select name="" id="66">
               {teachers.map(teacher => {
                 return (
@@ -110,13 +110,13 @@ function App() {
             <select name="" id="88">
               
             </select>
-            <input type="text" name="" id="" />
+            <input type="text" name="" id="" placeholder='Insert number of days'/>
             <button>Creation</button>
           </div>
         </div>
       </div>
       <div className={searchMenu? 'show':'hide'}>a</div>
-    </div>
+    </main>
   )
 }
 
