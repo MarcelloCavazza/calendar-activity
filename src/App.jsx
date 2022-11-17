@@ -110,27 +110,36 @@ function App() {
 
     let textteacherId =
       teacherSelect.options[teacherSelect.selectedIndex].value;
-    let fastTest = howManyDays(numberOfDays);
+
+    const date = new Date();
+    const todaysDate = date.getTime();
+    const formatedTOdaysDate = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
+    //only weekDays
+    let finalDate = todaysDate;
+    for (let index = 0; index < numberOfDays; index++) {
+      const milisecondsPerDay = 86400000;
+      finalDate += milisecondsPerDay;
+      let dateTemp = new Date(finalDate);
+      if (dateTemp.getDay() == 0 || dateTemp.getDay() == 6) {
+        numberOfDays++;
+      }
+    }
+    const newTime = new Date(finalDate);
+
+    const finalTime = `${newTime.getDate()}/${
+      newTime.getMonth() + 1
+    }/${newTime.getFullYear()}`;
+
     for (let schedule of schedules) {
       if (
         schedule.teacherId + "" == textteacherId &&
-        fastTest.finalTime <= schedule.dataToFinish
+        finalTime <= schedule.dataToFinish
       ) {
         alert("Teacher already has classes");
         return false;
       }
-    }
-    let newStartDate = null;
-    for (let schedule of schedules) {
-      if (schedule.teacherId + "" == textteacherId) {
-        newStartDate = schedule.dataToFinish;
-      }
-    }
-    let reponse = null;
-    if (newStartDate != null) {
-      reponse = howManyDays(numberOfDays, newStartDate);
-    } else {
-      reponse = howManyDays(numberOfDays);
     }
 
     setIndex(index + 1);
@@ -142,47 +151,10 @@ function App() {
         teacher: textteacherSelect,
         subject: textsubjectSelect,
         class: textclasSSelect,
-        dataToFinish: reponse.finalTime,
-        startDate:
-          newStartDate != null ? newStartDate : reponse.formatedTOdaysDate,
+        dataToFinish: finalTime,
+        startDate: formatedTOdaysDate,
       },
     ]);
-  };
-
-  const howManyDays = (numberOfDays, futureDate = false) => {
-    {
-      let date = null;
-      if (futureDate) {
-        let preSelectedDate = futureDate.replace("/", "-");
-        preSelectedDate = preSelectedDate.split("");
-        preSelectedDate = preSelectedDate.reverse();
-        preSelectedDate = preSelectedDate.join("");
-        console.log(preSelectedDate);
-        date = new Date(preSelectedDate);
-      } else {
-        date = new Date();
-      }
-      const todaysDate = date.getTime();
-      const formatedTOdaysDate = `${date.getDate()}/${
-        date.getMonth() + 1
-      }/${date.getFullYear()}`;
-      //only weekDays
-      let finalDate = todaysDate;
-      for (let index = 0; index < numberOfDays; index++) {
-        const milisecondsPerDay = 86400000;
-        finalDate += milisecondsPerDay;
-        let dateTemp = new Date(finalDate);
-        if (dateTemp.getDay() == 0 || dateTemp.getDay() == 6) {
-          numberOfDays++;
-        }
-      }
-      const newTime = new Date(finalDate);
-
-      const finalTime = `${newTime.getDate()}/${
-        newTime.getMonth() + 1
-      }/${newTime.getFullYear()}`;
-      return { finalTime, formatedTOdaysDate };
-    }
   };
 
   return (
