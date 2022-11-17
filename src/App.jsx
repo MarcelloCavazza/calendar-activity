@@ -91,6 +91,7 @@ function App() {
     let subjectSelect = document.getElementById("subject");
     let clasSSelect = document.getElementById("clasS");
     let numberOfDays = document.getElementById("numberOfDays").value;
+    let initalDate = document.getElementById("initialDate").value;
 
     let textteacherSelect =
       teacherSelect.options[teacherSelect.selectedIndex].text;
@@ -102,6 +103,7 @@ function App() {
       textteacherSelect == null ||
       textsubjectSelect == null ||
       textclasSSelect == null ||
+      initalDate == null ||
       numberOfDays <= 0
     ) {
       alert("Error to create Schedule!");
@@ -111,15 +113,16 @@ function App() {
     let textteacherId =
       teacherSelect.options[teacherSelect.selectedIndex].value;
 
-    const date = new Date();
-    const todaysDate = date.getTime();
-    const formatedTOdaysDate = `${date.getDate()}/${
+    const milisecondsPerDay = 86400000;
+    const date = new Date(initalDate);
+    const todaysDate = date.getTime() + milisecondsPerDay;
+
+    const formatedTOdaysDate = `${date.getDate() + 1}/${
       date.getMonth() + 1
     }/${date.getFullYear()}`;
     //only weekDays
     let finalDate = todaysDate;
     for (let index = 0; index < numberOfDays; index++) {
-      const milisecondsPerDay = 86400000;
       finalDate += milisecondsPerDay;
       let dateTemp = new Date(finalDate);
       if (dateTemp.getDay() == 0 || dateTemp.getDay() == 6) {
@@ -132,12 +135,13 @@ function App() {
       newTime.getMonth() + 1
     }/${newTime.getFullYear()}`;
 
-    for (let schedule of schedules) {
+    for (let indexS = 0; indexS < schedules.length; indexS++) {
       if (
-        schedule.teacherId + "" == textteacherId &&
-        finalTime <= schedule.dataToFinish
+        schedules[schedules.length - 1].teacherId + "" == textteacherId &&
+        formatedTOdaysDate >= schedules[schedules.length - 1].startDate &&
+        formatedTOdaysDate <= schedules[schedules.length - 1].dataToFinish
       ) {
-        alert("Teacher already has classes");
+        alert("Teacher already has classes in this period");
         return false;
       }
     }
@@ -216,6 +220,16 @@ function App() {
                 );
               })}
             </select>
+            <div>
+              <label>Initial Date</label>
+              <br />
+              <input
+                type="date"
+                id="initialDate"
+                placeholder="Insert number of days"
+              />
+            </div>
+
             <input
               type="number"
               id="numberOfDays"
